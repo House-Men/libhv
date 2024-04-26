@@ -42,6 +42,7 @@ HttpHandler::HttpHandler(hio_t* io) :
     tid(0),
     // for http
     io(io),
+    user_data(NULL),
     service(NULL),
     api_handler(NULL),
     // for websocket
@@ -418,7 +419,7 @@ void HttpHandler::handleExpect100() {
 void HttpHandler::addResponseHeaders() {
     HttpResponse* pResp = resp.get();
     // Server:
-    pResp->headers["Server"] = "libhv/" HV_VERSION_STRING;
+    // pResp->headers["Server"] = "libhv/" HV_VERSION_STRING;
 
     // Connection:
     pResp->headers["Connection"] = keepalive ? "keep-alive" : "close";

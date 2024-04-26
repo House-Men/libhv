@@ -51,6 +51,7 @@ public:
 
     // for http
     hio_t                   *io;
+    void                    *user_data;
     HttpService             *service;
     HttpRequestPtr          req;
     HttpResponsePtr         resp;
