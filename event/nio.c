@@ -323,8 +323,7 @@ read:
             // goto read_done;
             return;
         } else if (err == EMSGSIZE) {
-            // ignore
-            return;
+            nread = len;
         } else {
             // perror("read");
             io->error = err;
