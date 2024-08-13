@@ -330,7 +330,7 @@ read:
             goto read_error;
         }
     }
-    if (nread == 0) {
+    if (nread == 0 && io->io_type & HIO_TYPE_SOCK_STREAM) {
         goto disconnect;
     }
     if (nread < len) {
@@ -384,9 +384,9 @@ write:
             goto write_error;
         }
     }
-    if (nwrite == 0) {
-        goto disconnect;
-    }
+    // if (nwrite == 0) {
+    //     goto disconnect;
+    // }
     pbuf->offset += nwrite;
     io->write_bufsize -= nwrite;
     __write_cb(io, buf, nwrite);
@@ -515,9 +515,9 @@ try_write:
                 goto write_error;
             }
         }
-        if (nwrite == 0) {
-            goto disconnect;
-        }
+        // if (nwrite == 0) {
+        //     goto disconnect;
+        // }
         if (nwrite == len) {
             goto write_done;
         }
