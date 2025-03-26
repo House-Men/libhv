@@ -9,7 +9,7 @@
 #include "http_page.h"  // import make_index_of_page
 
 #ifdef OS_WIN
-#include <codecvt>
+#include "hstring.h" // import hv::utf8_to_wchar
 #endif
 
 #define ETAG_FMT    "\"%zx-%zx\""
@@ -23,7 +23,6 @@ file_cache_ptr FileCache::Open(const char* filepath, OpenParam* param) {
     std::lock_guard<std::mutex> locker(mutex_);
     file_cache_ptr fc = Get(filepath);
 #ifdef OS_WIN
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
     std::wstring wfilepath;
 #endif
     bool modified = false;
@@ -33,7 +32,7 @@ file_cache_ptr FileCache::Open(const char* filepath, OpenParam* param) {
             fc->stat_time = now;
             fc->stat_cnt++;
 #ifdef OS_WIN
-            wfilepath = conv.from_bytes(filepath);
+            wfilepath = hv::utf8_to_wchar(filepath);
             now = fc->st.st_mtime;
             _wstat(wfilepath.c_str(), (struct _stat*)&fc->st);
             modified = now != fc->st.st_mtime;
@@ -53,27 +52,24 @@ file_cache_ptr FileCache::Open(const char* filepath, OpenParam* param) {
 #ifdef O_BINARY
         flags |= O_BINARY;
 #endif
-        int fd = -1;
 #ifdef OS_WIN
-        if(wfilepath.empty()) wfilepath = conv.from_bytes(filepath);
-        // NOTE: Optimize Windows Not Found request performance
-        if(_wstat(wfilepath.c_str(), (struct _stat*)&st) != 0) {
-            param->error = ERR_OPEN_FILE;
-            return NULL;
-        }
-        // NOTE: open(dir) return -1 on windows
-        if(S_ISREG(st.st_mode)) {
-            fd = _wopen(wfilepath.c_str(), flags);
-        }else if(S_ISDIR(st.st_mode)) {
-            fd = 0;
+        if(wfilepath.empty()) wfilepath = hv::utf8_to_wchar(filepath);
+        const int fd = _wopen(wfilepath.c_str(), flags);
+        if (fd < 0) {
+            // NOTE: open(dir) return -1 on windows
+            _wstat(wfilepath.c_str(), (struct _stat*)&st);
+            if(!S_ISDIR(st.st_mode)) {
+                param->error = ERR_OPEN_FILE;
+                return NULL;
+            }
         }
 #else
-        fd = open(filepath, flags);
-#endif
+        const int fd = open(filepath, flags);
         if (fd < 0) {
             param->error = ERR_OPEN_FILE;
             return NULL;
         }
+#endif
         defer(if (fd > 0) { close(fd); })
         if (fc == NULL) {
             if (fd > 0) fstat(fd, &st);
