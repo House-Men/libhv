@@ -102,7 +102,7 @@ int main_ctx_init(int argc, char** argv) {
     snprintf(g_main_ctx.pidfile, sizeof(g_main_ctx.pidfile), "%s/logs/%s.pid", g_main_ctx.run_dir, g_main_ctx.program_name);
     snprintf(g_main_ctx.logfile, sizeof(g_main_ctx.logfile), "%s/logs/%s.log", g_main_ctx.run_dir, g_main_ctx.program_name);
     hlog_set_file(g_main_ctx.logfile);
-    delete_pidfile();
+    remove(g_main_ctx.pidfile);
     g_main_ctx.pid = getpid();
     g_main_ctx.oldpid = getpid_from_pidfile();
 #ifdef OS_UNIX
