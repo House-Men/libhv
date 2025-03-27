@@ -22,6 +22,7 @@ static void printf_callback(const char* fmt, ...) {
   va_end(ap);
 }
 
+static FILE* s_fp = NULL;
 printf_t printf_fn = printf_callback;
 main_ctx_t  g_main_ctx;
 
@@ -102,10 +103,21 @@ int main_ctx_init(int argc, char** argv) {
     snprintf(g_main_ctx.pidfile, sizeof(g_main_ctx.pidfile), "%s/logs/%s.pid", g_main_ctx.run_dir, g_main_ctx.program_name);
     snprintf(g_main_ctx.logfile, sizeof(g_main_ctx.logfile), "%s/logs/%s.log", g_main_ctx.run_dir, g_main_ctx.program_name);
     hlog_set_file(g_main_ctx.logfile);
+#ifdef OS_WIN
     remove(g_main_ctx.pidfile);
+#endif
     g_main_ctx.pid = getpid();
     g_main_ctx.oldpid = getpid_from_pidfile();
 #ifdef OS_UNIX
+    s_fp = fopen(g_main_ctx.pidfile, "a");
+    if(s_fp != NULL) {
+        if(flock(fileno(s_fp), LOCK_EX | LOCK_NB) == 0) {
+            g_main_ctx.oldpid = -1;
+            flock(fileno(s_fp), LOCK_UN);
+        }
+        fclose(s_fp);
+        s_fp = NULL;
+    }
     if (kill(g_main_ctx.oldpid, 0) == -1 && errno == ESRCH) {
         g_main_ctx.oldpid = -1;
     }
@@ -450,9 +462,9 @@ void setproctitle(const char* fmt, ...) {
 }
 #endif
 
-static FILE* s_fp = NULL;
+
 int create_pidfile() {
-    s_fp = fopen(g_main_ctx.pidfile, "w");
+    s_fp = fopen(g_main_ctx.pidfile, "a");
     if (s_fp == NULL) {
         hloge("fopen('%s') error: %d", g_main_ctx.pidfile, errno);
         return -1;
@@ -461,8 +473,12 @@ int create_pidfile() {
     if (flock(fileno(s_fp), LOCK_EX | LOCK_NB) < 0) {
         hloge("flock('%s') error: %d", g_main_ctx.pidfile, errno);
         fclose(s_fp);
+        s_fp = NULL;
         return -1;
     }
+    ftruncate(fileno(s_fp), 0);
+#else
+    chsize(fileno(s_fp), 0);
 #endif
     g_main_ctx.pid = hv_getpid();
     fprintf(s_fp, "%d\n", (int)g_main_ctx.pid);
@@ -473,14 +489,13 @@ int create_pidfile() {
 }
 
 void delete_pidfile(void) {
+    if(s_fp == NULL) return;
     hlogi("delete_pidfile('%s') pid=%d", g_main_ctx.pidfile, g_main_ctx.pid);
-    if(s_fp) {
 #ifdef OS_UNIX
-        flock(fileno(s_fp), LOCK_UN);
+    flock(fileno(s_fp), LOCK_UN);
 #endif
-        fclose(s_fp);
-        s_fp = NULL;
-    }
+    fclose(s_fp);
+    s_fp = NULL;
     remove(g_main_ctx.pidfile);
 }
 
