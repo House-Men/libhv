@@ -723,8 +723,10 @@ bool signal_handle(const char* signal) {
 #else
             SetEvent(s_hEventReload);
 #endif
+            hv_sleep(1);
+        } else {
+            printf_fn("%s is already stopped\n", g_main_ctx.program_name);
         }
-        hv_sleep(1);
 
         return true;
     } else {
