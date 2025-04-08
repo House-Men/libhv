@@ -280,6 +280,10 @@ if(UNIX)
     set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
 endif()
 
+if(WIN32)
+    install(FILES $<TARGET_PDB_FILE:${PROJECT_NAME}> DESTINATION bin OPTIONAL)
+endif()
+
 install(FILES ${LIBHV_HEADERS} DESTINATION include/hv)
 install(EXPORT libhvConfig DESTINATION lib/cmake/libhv)
 
