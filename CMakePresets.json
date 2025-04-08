@@ -44,6 +44,22 @@
             }
         },
         {
+            "name": "x86_64-msvc-debug",
+            "inherits": [
+                "Default"
+            ],
+            "toolchainFile": "$env{TOOLCHAIN_HOME}/cmake/x86_64-msvc-clang.cmake",
+            "binaryDir": "${sourceDir}/../x86_64-msvc-debug",
+            "installDir": "$env{PACKAGE_HOME}/x86_64-msvc2017-debug/libhv-1.3.3",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+                "USE_STATIC_RUNTIME": false,
+                "OPENSSL_INCLUDE_DIR": "$env{PACKAGE_HOME}/x86_64-msvc2017-cl/openssl-3.0.12/include",
+                "LIB_EAY": "$env{PACKAGE_HOME}/x86_64-msvc2017-cl/openssl-3.0.12/lib/libcrypto.lib",
+                "SSL_EAY": "$env{PACKAGE_HOME}/x86_64-msvc2017-cl/openssl-3.0.12/lib/libssl.lib"
+            }
+        },
+        {
             "name": "x86_64-msvc",
             "inherits": [
                 "Default"
@@ -129,6 +145,14 @@
             "hidden": true,
             "name": "default",
             "jobs": 26
+        },
+        {
+            "name": "RelWithDebInfo-x86_64-msvc-debug",
+            "inherits": [
+                "default"
+            ],
+            "configuration": "RelWithDebInfo",
+            "configurePreset": "x86_64-msvc-debug"
         },
         {
             "hidden": true,
