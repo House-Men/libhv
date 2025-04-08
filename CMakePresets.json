@@ -5,7 +5,7 @@
             "hidden": true,
             "name": "Default",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/../${presetName}-clang",
+            "binaryDir": "${sourceDir}/build/${presetName}-clang",
             "toolchainFile": "$env{TOOLCHAIN_HOME}/cmake/${presetName}-clang.cmake",
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": true,
@@ -49,7 +49,7 @@
                 "Default"
             ],
             "toolchainFile": "$env{TOOLCHAIN_HOME}/cmake/x86_64-msvc-clang.cmake",
-            "binaryDir": "${sourceDir}/../x86_64-msvc-debug",
+            "binaryDir": "${sourceDir}/build/x86_64-msvc-debug",
             "installDir": "$env{PACKAGE_HOME}/x86_64-msvc2017-debug/libhv-1.3.3",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo",
