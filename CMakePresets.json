@@ -1,0 +1,355 @@
+{
+    "version": 6,
+    "configurePresets": [
+        {
+            "hidden": true,
+            "name": "Default",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}-clang",
+            "toolchainFile": "$env{TOOLCHAIN_HOME}/cmake/${presetName}-clang.cmake",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+                "BUILD_EXAMPLES": true,
+                "BUILD_SHARED": true,
+                "BUILD_STATIC": true,
+                "BUILD_UNITTEST": false,
+                "BUILD_FOR_MT": false,
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_SKIP_INSTALL_RPATH": true,
+                "CMAKE_SKIP_RPATH": true,
+                "CPACK_SOURCE_7Z": false,
+                "CPACK_SOURCE_ZIP": false,
+                "CPACK_SOURCE_RPM": false,
+                "CPACK_SOURCE_TBZ2": false,
+                "CPACK_SOURCE_TGZ": false,
+                "CPACK_SOURCE_TXZ": false,
+                "CPACK_SOURCE_TZ": false,
+                "USE_MULTIMAP": false,
+                "ENABLE_UDS": false,
+                "ENABLE_WINDUMP": false,
+                "WITH_EVPP": true,
+                "WITH_HTTP": true,
+                "WITH_HTTP_CLIENT": true,
+                "WITH_HTTP_SERVER": true,
+                "WITH_KCP": true,
+                "WITH_MQTT": true,
+                "WITH_PROTOCOL": true,
+                "WITH_WEPOLL": true,
+                "WITH_OPENSSL": true,
+                "WITH_GNUTLS": false,
+                "WITH_MBEDTLS": false,
+                "WITH_NGHTTP2": false,
+                "WITH_CURL": false
+            }
+        },
+        {
+            "name": "x86_64-msvc-debug",
+            "inherits": [
+                "Default"
+            ],
+            "toolchainFile": "$env{TOOLCHAIN_HOME}/cmake/x86_64-msvc-clang.cmake",
+            "binaryDir": "${sourceDir}/build/x86_64-msvc-debug",
+            "installDir": "$env{PACKAGE_HOME}/x86_64-msvc2017-debug/libhv-1.3.3",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "USE_STATIC_RUNTIME": false,
+                "OPENSSL_INCLUDE_DIR": "$env{PACKAGE_HOME}/x86_64-msvc2017-cl/openssl-3.0.12/include",
+                "LIB_EAY": "$env{PACKAGE_HOME}/x86_64-msvc2017-cl/openssl-3.0.12/lib/libcrypto.lib",
+                "SSL_EAY": "$env{PACKAGE_HOME}/x86_64-msvc2017-cl/openssl-3.0.12/lib/libssl.lib"
+            }
+        },
+        {
+            "name": "x86_64-linux-debug",
+            "inherits": [
+                "Default"
+            ],
+            "toolchainFile": "$env{TOOLCHAIN_HOME}/cmake/x86_64-linux-gnu-clang.cmake",
+            "binaryDir": "${sourceDir}/build/x86_64-linux-debug",
+            "installDir": "$env{PACKAGE_HOME}/x86_64-linux-gnu8-debug/libhv-1.3.3",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "USE_STATIC_RUNTIME": false,
+                "OPENSSL_INCLUDE_DIR": "$env{PACKAGE_HOME}/x86_64-linux-gnu8-clang/openssl-3.0.12/include",
+                "OPENSSL_CRYPTO_LIBRARY": "$env{PACKAGE_HOME}/x86_64-linux-gnu8-clang/openssl-3.0.12/lib/libcrypto.so",
+                "OPENSSL_SSL_LIBRARY": "$env{PACKAGE_HOME}/x86_64-linux-gnu8-clang/openssl-3.0.12/lib/libssl.so"
+            }
+        },
+        {
+            "name": "x86_64-msvc",
+            "inherits": [
+                "Default"
+            ],
+            "installDir": "$env{PACKAGE_HOME}/${presetName}2017-clang/libhv-1.3.3",
+            "cacheVariables": {
+                "USE_STATIC_RUNTIME": false,
+                "OPENSSL_INCLUDE_DIR": "$env{PACKAGE_HOME}/${presetName}2017-cl/openssl-3.0.12/include",
+                "LIB_EAY": "$env{PACKAGE_HOME}/${presetName}2017-cl/openssl-3.0.12/lib/libcrypto.lib",
+                "SSL_EAY": "$env{PACKAGE_HOME}/${presetName}2017-cl/openssl-3.0.12/lib/libssl.lib"
+            }
+        },
+        {
+            "name": "i686-msvc",
+            "inherits": [
+                "Default"
+            ],
+            "installDir": "$env{PACKAGE_HOME}/${presetName}2017-clang/libhv-1.3.3",
+            "cacheVariables": {
+                "USE_STATIC_RUNTIME": false,
+                "OPENSSL_INCLUDE_DIR": "$env{PACKAGE_HOME}/${presetName}2017-cl/openssl-3.0.12/include",
+                "LIB_EAY": "$env{PACKAGE_HOME}/${presetName}2017-cl/openssl-3.0.12/lib/libcrypto.lib",
+                "SSL_EAY": "$env{PACKAGE_HOME}/${presetName}2017-cl/openssl-3.0.12/lib/libssl.lib"
+            }
+        },
+        {
+            "name": "x86_64-linux-gnu",
+            "inherits": [
+                "Default"
+            ],
+            "installDir": "$env{PACKAGE_HOME}/${presetName}8-clang/libhv-1.3.3",
+            "cacheVariables": {
+                "USE_STATIC_RUNTIME": false,
+                "OPENSSL_INCLUDE_DIR": "$env{PACKAGE_HOME}/${presetName}8-clang/openssl-3.0.12/include",
+                "OPENSSL_CRYPTO_LIBRARY": "$env{PACKAGE_HOME}/${presetName}8-clang/openssl-3.0.12/lib/libcrypto.so",
+                "OPENSSL_SSL_LIBRARY": "$env{PACKAGE_HOME}/${presetName}8-clang/openssl-3.0.12/lib/libssl.so"
+            }
+        },
+        {
+            "name": "armv7a-linux-gnueabihf",
+            "inherits": [
+                "Default"
+            ],
+            "installDir": "$env{PACKAGE_HOME}/${presetName}8-clang/libhv-1.3.3",
+            "cacheVariables": {
+                "USE_STATIC_RUNTIME": false,
+                "OPENSSL_INCLUDE_DIR": "$env{PACKAGE_HOME}/${presetName}8-clang/openssl-3.0.12/include",
+                "OPENSSL_CRYPTO_LIBRARY": "$env{PACKAGE_HOME}/${presetName}8-clang/openssl-3.0.12/lib/libcrypto.so",
+                "OPENSSL_SSL_LIBRARY": "$env{PACKAGE_HOME}/${presetName}8-clang/openssl-3.0.12/lib/libssl.so"
+            }
+        },
+        {
+            "name": "armv7a-linux-android",
+            "inherits": [
+                "Default"
+            ],
+            "installDir": "$env{PACKAGE_HOME}/${presetName}19-clang/libhv-1.3.3",
+            "cacheVariables": {
+                "USE_STATIC_RUNTIME": false,
+                "CMAKE_SYSTEM_VERSION": "19",
+                "OPENSSL_INCLUDE_DIR": "$env{PACKAGE_HOME}/${presetName}19-clang/openssl-3.0.12/include",
+                "OPENSSL_CRYPTO_LIBRARY": "$env{PACKAGE_HOME}/${presetName}19-clang/openssl-3.0.12/lib/libcrypto.so",
+                "OPENSSL_SSL_LIBRARY": "$env{PACKAGE_HOME}/${presetName}19-clang/openssl-3.0.12/lib/libssl.so"
+            }
+        },
+        {
+            "name": "aarch64-linux-android",
+            "inherits": [
+                "Default"
+            ],
+            "installDir": "$env{PACKAGE_HOME}/${presetName}21-clang/libhv-1.3.3",
+            "cacheVariables": {
+                "USE_STATIC_RUNTIME": false,
+                "CMAKE_SYSTEM_VERSION": "21",
+                "OPENSSL_INCLUDE_DIR": "$env{PACKAGE_HOME}/${presetName}21-clang/openssl-3.0.12/include",
+                "OPENSSL_CRYPTO_LIBRARY": "$env{PACKAGE_HOME}/${presetName}21-clang/openssl-3.0.12/lib/libcrypto.so",
+                "OPENSSL_SSL_LIBRARY": "$env{PACKAGE_HOME}/${presetName}21-clang/openssl-3.0.12/lib/libssl.so"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "hidden": true,
+            "name": "default",
+            "jobs": 26
+        },
+        {
+            "name": "Debug-x86_64-msvc-debug",
+            "inherits": [
+                "default"
+            ],
+            "configuration": "Debug",
+            "configurePreset": "x86_64-msvc-debug"
+        },
+        {
+            "name": "Debug-x86_64-linux-debug",
+            "inherits": [
+                "default"
+            ],
+            "configuration": "Debug",
+            "configurePreset": "x86_64-linux-debug"
+        },
+        {
+            "hidden": true,
+            "name": "x86_64-msvc",
+            "inherits": [
+                "default"
+            ],
+            "configurePreset": "x86_64-msvc"
+        },
+        {
+            "name": "Debug-x86_64-msvc",
+            "inherits": [
+                "x86_64-msvc"
+            ],
+            "configuration": "Debug"
+        },
+        {
+            "name": "Release-x86_64-msvc",
+            "inherits": [
+                "x86_64-msvc"
+            ],
+            "configuration": "Release"
+        },
+        {
+            "name": "RelWithDebInfo-x86_64-msvc",
+            "inherits": [
+                "x86_64-msvc"
+            ],
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "hidden": true,
+            "name": "i686-msvc",
+            "inherits": [
+                "default"
+            ],
+            "configurePreset": "i686-msvc"
+        },
+        {
+            "name": "Debug-i686-msvc",
+            "inherits": [
+                "i686-msvc"
+            ],
+            "configuration": "Debug"
+        },
+        {
+            "name": "Release-i686-msvc",
+            "inherits": [
+                "i686-msvc"
+            ],
+            "configuration": "Release"
+        },
+        {
+            "name": "RelWithDebInfo-i686-msvc",
+            "inherits": [
+                "i686-msvc"
+            ],
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "hidden": true,
+            "name": "armv7a-linux-gnueabihf",
+            "inherits": [
+                "default"
+            ],
+            "configurePreset": "armv7a-linux-gnueabihf"
+        },
+        {
+            "name": "Debug-armv7a-linux-gnueabihf",
+            "inherits": [
+                "armv7a-linux-gnueabihf"
+            ],
+            "configuration": "Debug"
+        },
+        {
+            "name": "Release-armv7a-linux-gnueabihf",
+            "inherits": [
+                "armv7a-linux-gnueabihf"
+            ],
+            "configuration": "Release"
+        },
+        {
+            "name": "RelWithDebInfo-armv7a-linux-gnueabihf",
+            "inherits": [
+                "armv7a-linux-gnueabihf"
+            ],
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "hidden": true,
+            "name": "armv7a-linux-android",
+            "inherits": [
+                "default"
+            ],
+            "configurePreset": "armv7a-linux-android"
+        },
+        {
+            "name": "Debug-armv7a-linux-android",
+            "inherits": [
+                "armv7a-linux-android"
+            ],
+            "configuration": "Debug"
+        },
+        {
+            "name": "Release-armv7a-linux-android",
+            "inherits": [
+                "armv7a-linux-android"
+            ],
+            "configuration": "Release"
+        },
+        {
+            "name": "RelWithDebInfo-armv7a-linux-android",
+            "inherits": [
+                "armv7a-linux-android"
+            ],
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "hidden": true,
+            "name": "aarch64-linux-android",
+            "inherits": [
+                "default"
+            ],
+            "configurePreset": "aarch64-linux-android"
+        },
+        {
+            "name": "Debug-aarch64-linux-android",
+            "inherits": [
+                "aarch64-linux-android"
+            ],
+            "configuration": "Debug"
+        },
+        {
+            "name": "Release-aarch64-linux-android",
+            "inherits": [
+                "aarch64-linux-android"
+            ],
+            "configuration": "Release"
+        },
+        {
+            "name": "RelWithDebInfo-aarch64-linux-android",
+            "inherits": [
+                "aarch64-linux-android"
+            ],
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "hidden": true,
+            "name": "x86_64-linux-gnu",
+            "inherits": [
+                "default"
+            ],
+            "configurePreset": "x86_64-linux-gnu"
+        },
+        {
+            "name": "Debug-x86_64-linux-gnu",
+            "inherits": [
+                "x86_64-linux-gnu"
+            ],
+            "configuration": "Debug"
+        },
+        {
+            "name": "Release-x86_64-linux-gnu",
+            "inherits": [
+                "x86_64-linux-gnu"
+            ],
+            "configuration": "Release"
+        },
+        {
+            "name": "RelWithDebInfo-x86_64-linux-gnu",
+            "inherits": [
+                "x86_64-linux-gnu"
+            ],
+            "configuration": "RelWithDebInfo"
+        }
+    ]
+}
