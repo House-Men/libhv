@@ -24,6 +24,7 @@
 #define hmutex_destroy      pthread_mutex_destroy
 #define hmutex_lock         pthread_mutex_lock
 #define hmutex_unlock       pthread_mutex_unlock
+#include <fcntl.h>
 #endif
 
 //#include "htime.h"
@@ -281,6 +282,9 @@ static void logfile_truncate(logger_t* logger) {
     }
     // reopen
     logger->fp_ = fopen(logger->cur_logfile, "a");
+#ifndef _WIN32
+    fcntl(fileno(logger->fp_), F_SETFD, fcntl(fileno(logger->fp_), F_GETFD) | FD_CLOEXEC);
+#endif
 }
 
 static FILE* logfile_shift(logger_t* logger) {
@@ -319,6 +323,9 @@ static FILE* logfile_shift(logger_t* logger) {
     if (logger->fp_ == NULL) {
         logfile_name(logger->filepath, ts_now, logger->cur_logfile, sizeof(logger->cur_logfile));
         logger->fp_ = fopen(logger->cur_logfile, "a");
+#ifndef _WIN32
+        fcntl(fileno(logger->fp_), F_SETFD, fcntl(fileno(logger->fp_), F_GETFD) | FD_CLOEXEC);
+#endif
         logger->last_logfile_ts = ts_now;
     }
 
@@ -499,10 +506,13 @@ int logger_print(logger_t* logger, int level, const char* fmt, ...) {
 }
 
 static logger_t* s_logger = NULL;
+void default_logger_exit_fsync(void) {
+    if (s_logger) logger_fsync(s_logger);
+}
 logger_t* hv_default_logger() {
     if (s_logger == NULL) {
         s_logger = logger_create();
-        atexit(hv_destroy_default_logger);
+        atexit(default_logger_exit_fsync);
     }
     return s_logger;
 }
