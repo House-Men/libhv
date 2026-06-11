@@ -42,6 +42,7 @@ HttpHandler::HttpHandler(hio_t* io) :
     tid(0),
     // for http
     io(io),
+    server(NULL),
     service(NULL),
     api_handler(NULL),
     // for websocket
@@ -438,7 +439,7 @@ void HttpHandler::handleExpect100() {
 void HttpHandler::addResponseHeaders() {
     HttpResponse* pResp = resp.get();
     // Server:
-    pResp->headers["Server"] = "libhv/" HV_VERSION_STRING;
+    // pResp->headers["Server"] = "libhv/" HV_VERSION_STRING;
 
     // Connection:
     pResp->headers["Connection"] = keepalive ? "keep-alive" : "close";
@@ -556,14 +557,15 @@ int HttpHandler::defaultRequestHandler() {
 int HttpHandler::defaultStaticHandler() {
     // file service
     std::string path = req->Path();
-    const char* req_path = path.c_str();
-    // path safe check
-    if (req_path[0] != '/' || strstr(req_path, "/..") || strstr(req_path, "\\..")) {
+    path.resize(hv_normalize_path(const_cast<char*>(path.c_str())));
+    if (path.empty()) {
+        hloge("[%s:%d] Illegal relative path: %s", ip, port, req->path.c_str());
         return HTTP_STATUS_BAD_REQUEST;
     }
 
+    const char* req_path = path.c_str();
     std::string filepath;
-    bool is_dir = path.back() == '/' &&
+    const bool is_dir = path.back() == '/' &&
                   service->index_of.size() > 0 &&
                   hv_strstartswith(req_path, service->index_of.c_str());
     if (is_dir) {
